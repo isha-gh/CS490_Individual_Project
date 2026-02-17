@@ -7,7 +7,7 @@ function Landing() {
   const [topActors, setTopActors] = useState([]);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/api/top-films")
+    fetch("http://127.0.0.1:5000/api/films/top-films")
       .then(res => res.json())
       .then(data => setTopFilms(data))
       .catch(err => console.error(err));
@@ -22,7 +22,10 @@ function Landing() {
 
   return (
     <div className="landing-container">
-      <h1>Top 5 Rented Films</h1>
+      <div className="landing-top">
+        <h1>Top 5 Rented Films</h1>
+        <Link to="/films" className="search-button">Search Films</Link>
+      </div>
       <div className="card-grid">
         {topFilms.map(film => (
           <Link to={`/films/${film.film_id}`} className="card" key={film.film_id}>

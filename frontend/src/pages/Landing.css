@@ -4,6 +4,32 @@
   font-family: Arial, sans-serif;
 }
 
+.landing-top{
+  width:100%;
+  max-width:1100px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+
+.search-button{
+  background: transparent;
+  color: #d4af37; /* gold */
+  border: 2px solid rgba(212,175,55,0.9);
+  padding:10px 16px;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:600;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.35), 0 0 0 3px rgba(212,175,55,0.06) inset;
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+
+.search-button:hover{
+  transform: translateY(-3px);
+  background: rgba(212,175,55,0.06);
+}
+
 
 .card-grid {
   display: grid;

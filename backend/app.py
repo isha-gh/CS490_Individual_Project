@@ -4,7 +4,7 @@ from routes.film_search import film_search_bp
 #from routes.film_details import film_details_bp
 from routes.films import films_bp
 from routes.actors import actors_bp
-from routes.customers import customers_bp
+from routes.customers import customers_bp, rentals_bp
 
 
 app = Flask(__name__)
@@ -15,6 +15,7 @@ app.register_blueprint(film_search_bp) #make routes visible
 app.register_blueprint(films_bp)
 app.register_blueprint(actors_bp)
 app.register_blueprint(customers_bp)
+app.register_blueprint(rentals_bp)  # endpoints like /api/rentals/<id>/return
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -7,7 +7,11 @@ function CustomerPage() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState({ first_name: "", last_name: "", email: "" });
+  const [rentals, setRentals] = useState([]);
+
+
 
   useEffect(() => {
     fetch(`http://127.0.0.1:5000/api/customers/?query=${search}&page=${page}`)
@@ -17,8 +21,13 @@ function CustomerPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch("http://127.0.0.1:5000/api/customers/", {
-      method: "POST",
+    const method = form.customer_id ? "PUT" : "POST";
+const url = form.customer_id
+  ? `http://127.0.0.1:5000/api/customers/${form.customer_id}`
+  : "http://127.0.0.1:5000/api/customers/";
+
+fetch(url, {
+  method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
     }).then(() => {
@@ -35,7 +44,9 @@ function CustomerPage() {
         method: "DELETE",
       })
       .then(res => res.json())
-      .then(data => {
+      .then(data => {   
+        setCustomers(data);
+        setForm(data);
         if (data.error) {
           alert(data.error);
         } else {
@@ -44,6 +55,50 @@ function CustomerPage() {
       });
     }
   };
+
+  const saveCustomer = async () => {
+  await fetch(`http://127.0.0.1:5000/api/customers/${form.customer_id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(form)
+  });
+
+  setEditingId(null);
+  setSearch("");
+  setPage(1);
+};
+
+const fetchRentals = async () => {
+  const res = await fetch("/api/rentals");
+  const data = await res.json();
+  setRentals(data);
+};
+
+const handleReturn = async (rentalId) => {
+  try {
+    const res = await fetch(
+      `http://127.0.0.1:5000/api/rentals/${rentalId}/return`,
+      {
+        method: "PUT",
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.error);
+      return;
+    }
+
+    alert("Movie returned successfully!");
+
+    fetchRentals(); // refresh list
+  } catch (err) {
+    console.error(err);
+  }
+};
 
   return (
     <div className="landing-container" style={{ minHeight: "100vh", color: "white", padding: "20px" }}>
@@ -103,6 +158,13 @@ function CustomerPage() {
               <td style={cellStyle}>{c.last_name}</td>
               <td style={cellStyle}>{c.email}</td>
               <td style={cellStyle}>
+                <Link
+                  to={`/customers/${c.customer_id}`}
+                  className="search-button"
+                  style={{ marginRight: "10px" }}
+                >
+                  View
+                </Link>
                 <button 
                   onClick={() => handleDelete(c.customer_id)}
                   className="search-button"
@@ -110,6 +172,75 @@ function CustomerPage() {
                 >
                   Delete
                 </button>
+                {editingId !== c.customer_id ? (
+                  <button
+                    className="search-button"
+                    onClick={() => {
+                      setEditingId(c.customer_id);
+                      setForm(c);
+                    }}
+                  >
+                    Edit Customer
+                  </button>
+                ) : (
+                  <div className="edit-box">
+                    <input
+                      value={form.first_name}
+                      onChange={e =>
+                        setForm({ ...form, first_name: e.target.value })
+                      }
+                      placeholder="First Name"
+                    />
+
+                    <input
+                      value={form.last_name}
+                      onChange={e =>
+                        setForm({ ...form, last_name: e.target.value })
+                      }
+                      placeholder="Last Name"
+                    />
+
+                    <input
+                      value={form.email}
+                      onChange={e =>
+                        setForm({ ...form, email: e.target.value })
+                      }
+                      placeholder="Email"
+                    />
+
+                    <label>
+                      Active:
+                      <input
+                        type="checkbox"
+                        checked={form.active}
+                        onChange={e =>
+                          setForm({ ...form, active: e.target.checked ? 1 : 0 })
+                        }
+                      />
+                    </label>
+
+                    <button onClick={saveCustomer}>
+                      Save Changes
+                    </button>
+                    <button onClick={() => setEditingId(null)} className="search-button" style={{ borderColor: "#666", color: "#999" }}>
+                      Cancel
+                    </button>
+                  </div>
+                )}
+                {rentals.map((rental) => (
+  <div key={rental.rental_id}>
+    <p>{rental.title}</p>
+
+    {!rental.return_date && (
+      <button
+        onClick={() => handleReturn(rental.rental_id)}
+        className="search-button"
+      >
+        Return Movie
+      </button>
+    )}
+  </div>
+))}
               </td>
             </tr>
           ))}

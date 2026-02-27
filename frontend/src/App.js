@@ -4,6 +4,7 @@ import ActorDetails from "./pages/ActorDetails";
 import Films from "./pages/Films";
 import FilmDetails from "./pages/FilmDetails";
 import CustomerPage from "./pages/CustomerPage";
+import CustomerDetails from "./pages/CustomerDetails";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/films" element={<Films />} />
         <Route path="/films/:id" element={<FilmDetails />} />
         <Route path="/customers" element={<CustomerPage />} />
+        <Route path="/customers/:id" element={<CustomerDetails />} />
 
       </Routes>
     </Router>

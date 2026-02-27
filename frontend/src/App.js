@@ -3,6 +3,7 @@ import Landing from "./pages/Landing";
 import ActorDetails from "./pages/ActorDetails";
 import Films from "./pages/Films";
 import FilmDetails from "./pages/FilmDetails";
+import CustomerPage from "./pages/CustomerPage";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/actors/:id" element={<ActorDetails />} />
         <Route path="/films" element={<Films />} />
         <Route path="/films/:id" element={<FilmDetails />} />
+        <Route path="/customers" element={<CustomerPage />} />
 
       </Routes>
     </Router>

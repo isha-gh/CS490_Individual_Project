@@ -24,8 +24,13 @@ function Landing() {
     <div className="landing-container">
       <div className="landing-top">
         <h1>Top 5 Rented Films</h1>
-        <Link to="/films" className="search-button">Search Films</Link>
+        {/* Added button container to keep them aligned */}
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <Link to="/customers" className="search-button">Manage Customers</Link>
+          <Link to="/films" className="search-button">Search Films</Link>
+        </div>
       </div>
+
       <div className="card-grid">
         {topFilms.map(film => (
           <Link to={`/films/${film.film_id}`} className="card" key={film.film_id}>
